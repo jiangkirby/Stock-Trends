@@ -87,7 +87,7 @@ def query_all_articles(start_date, end_date):
         progress_bar.update(1)
         
         # Sleep program 
-        if day_count % 10 == 0:
+        if day_count % 9 == 0:
             print("Waiting for 1 minute...")
             time.sleep(60)
     
@@ -135,7 +135,7 @@ def query_stock_articles(start_date, end_date, stock):
         progress_bar.update(1)
         
         # Sleep program 
-        if day_count % 10 == 0:
+        if day_count % 9 == 0:
             print("Waiting for 1 minute...")
             time.sleep(60)
     
@@ -277,45 +277,46 @@ def read_json_file(file_path):
     return data
 
 def main():
-    start_date = datetime.datetime(2019, 1, 1)
-    end_date = datetime.datetime(2019, 12, 31)
+    start_date = datetime.datetime(2020, 1, 1)
+    end_date = datetime.datetime(2020, 12, 31)
 
     # Generate the file dates
     filedates = f"{start_date.strftime('%Y-%m-%d')}_{end_date.strftime('%Y-%m-%d')}"
 
 
     # Query general news data and remove redundant info
-    # gen_query = query_all_articles(start_date, end_date)
-    # gen_data = extract_data(gen_query)
-    # write_to_json(gen_data, "gen_news_" + filedates)
-    # filtered_gen_data = get_pubdate_abstract("gen_news_2019-01-01_2019-12-31")
+    gen_query = query_all_articles(start_date, end_date)
+    gen_data = extract_data(gen_query)
+    write_to_json(gen_data, "gen_news_" + filedates)
+    filtered_gen_data = get_pubdate_abstract(gen_data)
+    write_to_json(filtered_gen_data, "gen_data_" + filedates)
 
-    # # Query stock news
+    # # # Query stock news
     # stock_query = query_stock_articles(start_date, end_date, 'Apple')
     # stock_data = extract_data(stock_query)
     # write_to_json(stock_data, "stock_news_" + filedates)
     # filtered_stock_data = get_pubdate_abstract(stock_data)
     # write_to_json(filtered_stock_data, "apple_data_" + filedates)
 
-    filtered_gen_data = read_json_file("gen_data_2019-01-01_2019-12-31")
-    filtered_stock_data = read_json_file("apple_data_2019-01-01_2019-12-31")
-    filtered_gen_data = remove_stock_news_from_general_news(filtered_gen_data, filtered_stock_data)
-    write_to_json(filtered_gen_data, "gen_data_" + filedates)
+    # filtered_gen_data = read_json_file("gen_data_2019-01-01_2019-12-31")
+    # filtered_stock_data = read_json_file("apple_data_2019-01-01_2019-12-31")
+    # filtered_gen_data = remove_stock_news_from_general_news(filtered_gen_data, filtered_stock_data)
+    # write_to_json(filtered_gen_data, "gen_data_" + filedates)
 
-    grouped_stock_data = group_data(filtered_stock_data)
-    grouped_gen_data = group_data(filtered_gen_data)
+    # grouped_stock_data = group_data(filtered_stock_data)
+    # grouped_gen_data = group_data(filtered_gen_data)
 
-    stock_sentiments = calculate_sentiments(grouped_stock_data)
-    gen_sentiments = calculate_sentiments(grouped_gen_data)
+    # stock_sentiments = calculate_sentiments(grouped_stock_data)
+    # gen_sentiments = calculate_sentiments(grouped_gen_data)
 
-    write_to_json(stock_sentiments, 'apple_sentiments_' + filedates)
-    write_to_json(gen_sentiments, 'gen_sentiments' + filedates)
+    # write_to_json(stock_sentiments, 'apple_sentiments_' + filedates)
+    # write_to_json(gen_sentiments, 'gen_sentiments' + filedates)
 
-    print("Stock Sentiment")
-    print(stock_sentiments)
-    print("\n")
-    print("General News Sentiment")
-    print(gen_sentiments)
+    # print("Stock Sentiment")
+    # print(stock_sentiments)
+    # print("\n")
+    # print("General News Sentiment")
+    # print(gen_sentiments)
 
 
 
