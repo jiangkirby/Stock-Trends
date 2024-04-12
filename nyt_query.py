@@ -13,7 +13,7 @@ from pynytimes import NYTAPI
 from collections import defaultdict
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-API_KEY = "GZ9pdWstuVQVsipgWImxKywA2JGNsfgJ"
+API_KEY = "89Svqeqz1rDAtcQz3ZEKNwEudUkxAXMi"
 nyt = NYTAPI(API_KEY, parse_dates=True)
 
 # Query filters
