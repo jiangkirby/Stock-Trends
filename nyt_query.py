@@ -271,6 +271,11 @@ def calculate_sentiments(abstracts_by_date):
 
     return sentiments_by_date
 
+def read_json_file(file_path):
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+    return data
+
 def main():
     start_date = datetime.datetime(2019, 1, 1)
     end_date = datetime.datetime(2019, 12, 31)
@@ -283,15 +288,17 @@ def main():
     # gen_query = query_all_articles(start_date, end_date)
     # gen_data = extract_data(gen_query)
     # write_to_json(gen_data, "gen_news_" + filedates)
-    filtered_gen_data = get_pubdate_abstract("gen_news_2019-01-01_2019-12-31")
+    # filtered_gen_data = get_pubdate_abstract("gen_news_2019-01-01_2019-12-31")
 
     # # Query stock news
-    stock_query = query_stock_articles(start_date, end_date, 'Apple')
-    stock_data = extract_data(stock_query)
-    write_to_json(stock_data, "stock_news_" + filedates)
-    filtered_stock_data = get_pubdate_abstract(stock_data)
-    write_to_json(filtered_stock_data, "apple_data_" + filedates)
+    # stock_query = query_stock_articles(start_date, end_date, 'Apple')
+    # stock_data = extract_data(stock_query)
+    # write_to_json(stock_data, "stock_news_" + filedates)
+    # filtered_stock_data = get_pubdate_abstract(stock_data)
+    # write_to_json(filtered_stock_data, "apple_data_" + filedates)
 
+    filtered_gen_data = read_json_file("gen_data_2019-01-01_2019-12-31")
+    filtered_stock_data = read_json_file("apple_data_2019-01-01_2019-12-31")
     filtered_gen_data = remove_stock_news_from_general_news(filtered_gen_data, filtered_stock_data)
     write_to_json(filtered_gen_data, "gen_data_" + filedates)
 
