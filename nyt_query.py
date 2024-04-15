@@ -172,7 +172,7 @@ def extract_data(article_or_list):
 
 
 '''
-Fetches pub_date and abstract from data. Can take a json filename with data or a list of data.
+Fetches pub_date and abstract from data, and groups them by date. Can take a json filename with data or a list of data.
 Returns list of filtered data.
 '''
 def get_pubdate_abstract(data_or_filename):
@@ -201,8 +201,6 @@ def get_pubdate_abstract(data_or_filename):
 
     return filtered_data
 
-
-
 '''
 Compared a list of stock specific news with a list of general news. Removes stock specific news from
 general news and return the new list of general news.
@@ -216,8 +214,6 @@ def remove_stock_news_from_general_news(general_news, stock_news):
                              if article["abstract"] not in stock_abstracts_set]
     
     return filtered_general_news
-
-
 
 '''
 Groups abstracts of articles by common date and sorts by date.
@@ -234,6 +230,21 @@ def group_data(data):
     
     return sorted_abstracts_by_date
 
+
+def merge_json_files(file1, file2):
+    merged_list = []
+
+    # Read and parse data from the first file
+    with open(file1, 'r') as f1:
+        data1 = json.load(f1)
+        merged_list.extend(data1)
+
+    # Read and parse data from the second file
+    with open(file2, 'r') as f2:
+        data2 = json.load(f2)
+        merged_list.extend(data2)
+
+    return merged_list
 
 '''
 Serializes datatime type objects from the query into string so that json file may be written correctly.
@@ -277,8 +288,8 @@ def read_json_file(file_path):
     return data
 
 def main():
-    start_date = datetime.datetime(2020, 1, 1)
-    end_date = datetime.datetime(2020, 12, 31)
+    start_date = datetime.datetime(2021, 1, 1)
+    end_date = datetime.datetime(2021, 12, 31)
 
     # Generate the file dates
     filedates = f"{start_date.strftime('%Y-%m-%d')}_{end_date.strftime('%Y-%m-%d')}"
@@ -288,18 +299,21 @@ def main():
     gen_query = query_all_articles(start_date, end_date)
     gen_data = extract_data(gen_query)
     write_to_json(gen_data, "gen_news_" + filedates)
-    filtered_gen_data = get_pubdate_abstract(gen_data)
+    filtered_gen_data = group_data(get_pubdate_abstract(gen_data))
     write_to_json(filtered_gen_data, "gen_data_" + filedates)
+    # merged_files = merge_json_files('data/news/general_news_2019-2020',filtered_gen_data)
+    # write_to_json(merged_files, 'data/news/general_news_2019-2021')
 
-    # # # Query stock news
+
+    # Query stock news
     # stock_query = query_stock_articles(start_date, end_date, 'Apple')
     # stock_data = extract_data(stock_query)
-    # write_to_json(stock_data, "stock_news_" + filedates)
+    # write_to_json(stock_data, "apple_news_" + filedates)
     # filtered_stock_data = get_pubdate_abstract(stock_data)
     # write_to_json(filtered_stock_data, "apple_data_" + filedates)
 
-    # filtered_gen_data = read_json_file("gen_data_2019-01-01_2019-12-31")
-    # filtered_stock_data = read_json_file("apple_data_2019-01-01_2019-12-31")
+    # filtered_gen_data = read_json_file("gen_data_2020-01-01_2020-12-31")
+    # filtered_stock_data = read_json_file("apple_data_2020-01-01_2020-12-31")
     # filtered_gen_data = remove_stock_news_from_general_news(filtered_gen_data, filtered_stock_data)
     # write_to_json(filtered_gen_data, "gen_data_" + filedates)
 
@@ -310,7 +324,7 @@ def main():
     # gen_sentiments = calculate_sentiments(grouped_gen_data)
 
     # write_to_json(stock_sentiments, 'apple_sentiments_' + filedates)
-    # write_to_json(gen_sentiments, 'gen_sentiments' + filedates)
+    # write_to_json(gen_sentiments, 'gen_sentiments_' + filedates)
 
     # print("Stock Sentiment")
     # print(stock_sentiments)
@@ -328,6 +342,12 @@ def main():
 
     # # Print the compound sentiment for each date
     # print(sentiments_by_date)
+
+
+
+    
+
+
 
     
 
